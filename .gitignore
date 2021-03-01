@@ -143,4 +143,5 @@ fabric.properties
 .idea/caches/build_file_checksums.ser
 
 .idea/*
-:
+bigringdb.mv.db
+bigringdb.trace.db
