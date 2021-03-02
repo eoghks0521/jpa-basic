@@ -25,7 +25,8 @@ public class StudyRunner implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         // create();
         // update();
-        findByJPQL();
+        // findByJPQL();
+        managePersistenceContext();
     }
     private void create(){
         Member member = new Member();
@@ -47,6 +48,23 @@ public class StudyRunner implements ApplicationRunner {
         for (Member member : memberList) {
             log.info("member name: {}", member.getName());
         }
+    }
+
+    private void managePersistenceContext(){
+        //비영속
+        Member member = new Member();
+        member.setId(3L);
+        member.setName("hi");
+
+        //영속
+        log.info("before");
+        em.persist(member);
+        log.info("after");
+        // before after 와 상관없이 뒤에 쿼리가 날아간다. -> 트랜잭션 커밋을 하는 순간 날아감
+
+        // 1차 캐시에서 값을 가져오기 때문에 쿼리가 날아가지 않는다.
+        Member findMember = em.find(Member.class,"3L");
+        log.info("member name: {}", findMember.getName());
     }
 
 }
