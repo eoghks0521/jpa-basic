@@ -23,13 +23,14 @@ public class StudyRunner implements ApplicationRunner {
     @Transactional
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        // create();
+        create();
         // update();
         // findByJPQL();
-        managePersistenceContext();
+        //managePersistenceContext();
     }
     private void create(){
         Member member = new Member();
+        member.setId(1L);
         member.setName("hello");
         em.persist(member);
     }

@@ -1,6 +1,5 @@
 # jpa-roadmap
 ## 김영한님의 JPA 로드맵
-<hr/>
 <h3>자바 ORM 표준 JPA 프로그래밍 - 기본편 </h3>
 섹션 1. JPA 소개 <br/>
 섹션 2. JPA 시작하기 <br/>
