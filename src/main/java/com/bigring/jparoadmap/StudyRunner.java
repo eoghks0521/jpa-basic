@@ -11,6 +11,9 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.bigring.jparoadmap.relation.RelationMember;
+import com.bigring.jparoadmap.relation.Team;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Component
@@ -23,11 +26,36 @@ public class StudyRunner implements ApplicationRunner {
     @Transactional
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        create();
+        //create();
         // update();
         // findByJPQL();
         //managePersistenceContext();
+        relate();
     }
+
+    private void relate() {
+        Team team = new Team();
+        team.setName("TeamA");
+        em.persist(team);
+
+        RelationMember member = new RelationMember();
+        member.setUsername("MemberA");
+        member.setTeam(team);
+        em.persist(member);
+
+        // 영속성 컨텍스트의 1차캐시를 타지 않게 하고 디비에서 가져오는 쿼리를 보고 싶다하는 경우
+        // em.flush();
+        // em.clear();
+
+        RelationMember findMember = em.find(RelationMember.class, member.getId());
+        Team findTeam = findMember.getTeam();
+        log.info("findTeam = {}",findTeam.getName());
+
+        // 맴버 외래키 변경
+        Team newTema = em.find(Team.class, 100L);
+        findMember.setTeam(newTema);
+    }
+
     private void create(){
         Member member = new Member();
         member.setId(1L);
