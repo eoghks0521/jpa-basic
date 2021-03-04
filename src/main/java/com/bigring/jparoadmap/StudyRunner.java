@@ -3,7 +3,6 @@ package com.bigring.jparoadmap;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceContext;
 
 import org.springframework.boot.ApplicationArguments;
@@ -26,34 +25,12 @@ public class StudyRunner implements ApplicationRunner {
     @Transactional
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        //create();
+        // create();
         // update();
         // findByJPQL();
         //managePersistenceContext();
-        relate();
-    }
-
-    private void relate() {
-        Team team = new Team();
-        team.setName("TeamA");
-        em.persist(team);
-
-        RelationMember member = new RelationMember();
-        member.setUsername("MemberA");
-        member.setTeam(team);
-        em.persist(member);
-
-        // 영속성 컨텍스트의 1차캐시를 타지 않게 하고 디비에서 가져오는 쿼리를 보고 싶다하는 경우
-        // em.flush();
-        // em.clear();
-
-        RelationMember findMember = em.find(RelationMember.class, member.getId());
-        Team findTeam = findMember.getTeam();
-        log.info("findTeam = {}",findTeam.getName());
-
-        // 맴버 외래키 변경
-        Team newTema = em.find(Team.class, 100L);
-        findMember.setTeam(newTema);
+        // unidirectional();
+        bidirectional();
     }
 
     private void create(){
@@ -94,6 +71,52 @@ public class StudyRunner implements ApplicationRunner {
         // 1차 캐시에서 값을 가져오기 때문에 쿼리가 날아가지 않는다.
         Member findMember = em.find(Member.class,"3L");
         log.info("member name: {}", findMember.getName());
+    }
+
+    private void unidirectional() {
+        Team team = new Team();
+        team.name("TeamA");
+        em.persist(team);
+
+        RelationMember member = new RelationMember();
+        member.username("MemberA");
+        // 양방향 테스트를 위해 주석처리
+        // member.team(team);
+        em.persist(member);
+
+        // 영속성 컨텍스트의 1차캐시를 타지 않게 하고 디비에서 가져오는 쿼리를 보고 싶다하는 경우
+        // em.flush();
+        // em.clear();
+
+        RelationMember findMember = em.find(RelationMember.class, member.id());
+        Team findTeam = findMember.team();
+        log.info("findTeam = {}",findTeam.name());
+
+        // 양방향 테스트를 위해 주석처리
+        // 맴버 외래키 변경
+        // Team newTeam = em.find(Team.class, 100L);
+        // findMember.team(newTeam);
+    }
+
+    private void bidirectional() {
+        Team team = new Team();
+        team.name("TeamA");
+        em.persist(team);
+
+        RelationMember member = new RelationMember();
+        member.username("MemberA");
+        member.changeTeam(team);
+        em.persist(member);
+
+        em.flush();
+        em.clear();
+
+        Team findTeam = em.find(Team.class, team.id());
+        List<RelationMember> members = findTeam.members();
+
+        for (RelationMember relationMember : members) {
+            log.info("username: {}", relationMember.username());
+        }
     }
 
 }
