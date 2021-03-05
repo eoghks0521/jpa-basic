@@ -1,5 +1,6 @@
 package com.bigring.jparoadmap;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -12,6 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.bigring.jparoadmap.relation.RelationMember;
 import com.bigring.jparoadmap.relation.Team;
+import com.bigring.jparoadmap.shop.domain.Item;
+import com.bigring.jparoadmap.shop.domain.Member;
+import com.bigring.jparoadmap.shop.domain.Order;
+import com.bigring.jparoadmap.shop.domain.OrderItem;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,47 +35,48 @@ public class StudyRunner implements ApplicationRunner {
         // findByJPQL();
         //managePersistenceContext();
         // unidirectional();
-        bidirectional();
+        // bidirectional();
+        sample();
     }
 
     private void create(){
-        Member member = new Member();
-        member.setId(1L);
-        member.setName("hello");
-        em.persist(member);
+        BasicMember basicMember = new BasicMember();
+        basicMember.setId(1L);
+        basicMember.setName("hello");
+        em.persist(basicMember);
     }
 
     private void update(){
-        Member findMember = em.find(Member.class, 1L);
-        log.info("Member id: {}, name: {}",findMember.getId(),findMember.getName());
-        findMember.setName("updateHello");
+        BasicMember findBasicMember = em.find(BasicMember.class, 1L);
+        log.info("Member id: {}, name: {}", findBasicMember.getId(), findBasicMember.getName());
+        findBasicMember.setName("updateHello");
     }
 
     private void findByJPQL(){
-        List<Member> memberList = em.createQuery("select m from Member as m", Member.class)
+        List<BasicMember> basicMemberList = em.createQuery("select m from Member as m", BasicMember.class)
             .setFirstResult(0)
             .setMaxResults(10)
             .getResultList();
-        for (Member member : memberList) {
-            log.info("member name: {}", member.getName());
+        for (BasicMember basicMember : basicMemberList) {
+            log.info("member name: {}", basicMember.getName());
         }
     }
 
     private void managePersistenceContext(){
         //비영속
-        Member member = new Member();
-        member.setId(3L);
-        member.setName("hi");
+        BasicMember basicMember = new BasicMember();
+        basicMember.setId(3L);
+        basicMember.setName("hi");
 
         //영속
         log.info("before");
-        em.persist(member);
+        em.persist(basicMember);
         log.info("after");
         // before after 와 상관없이 뒤에 쿼리가 날아간다. -> 트랜잭션 커밋을 하는 순간 날아감
 
         // 1차 캐시에서 값을 가져오기 때문에 쿼리가 날아가지 않는다.
-        Member findMember = em.find(Member.class,"3L");
-        log.info("member name: {}", findMember.getName());
+        BasicMember findBasicMember = em.find(BasicMember.class,"3L");
+        log.info("member name: {}", findBasicMember.getName());
     }
 
     private void unidirectional() {
@@ -116,6 +122,38 @@ public class StudyRunner implements ApplicationRunner {
 
         for (RelationMember relationMember : members) {
             log.info("username: {}", relationMember.username());
+        }
+    }
+
+    private void sample(){
+
+        Member member = new Member();
+        member.setName("memberA");
+        em.persist(member);
+
+        Order order = new Order();
+        order.setOrderDate(LocalDateTime.now());
+        order.setMember(member);
+        em.persist(order);
+
+        Item item = new Item();
+        item.setName("itemA");
+        em.persist(item);
+
+        OrderItem orderItem = new OrderItem();
+        orderItem.setCount(3);
+        orderItem.addOrder(order);
+        orderItem.setItem(item);
+        em.persist(orderItem);
+
+        em.flush();
+        em.clear();
+
+        Order findOrder = em.find(Order.class, order.getId());
+        List<OrderItem> orderItems = findOrder.getOrderItems();
+
+        for (OrderItem findOrderItem : orderItems) {
+            log.info("item count: {}", findOrderItem.getCount());
         }
     }
 
