@@ -7,22 +7,33 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
+@ToString(exclude = "categoryItems")
 @Entity
-public class Item {
+public class Category {
 
     @Id @GeneratedValue
-    @Column(name = "item_id")
+    @Column(name = "category_id")
     private Long id;
 
     private String name;
 
     @OneToMany(mappedBy = "category")
     private List<CategoryItem> categoryItems = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "parent_id")
+    private Category parent;
+
+    @OneToMany(mappedBy = "parent")
+    private List<Category> child = new ArrayList<>();
 }
