@@ -15,9 +15,10 @@ import lombok.ToString;
 @Setter
 @ToString
 @Entity
-// DTYPE이 필수로 필요하기 때문에 DiscriminatorColumn 어노테이션이 없어도 DTYPE이 생성된다.
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-public class BasicItem {
+// 이 전략은 애초에 테이블로 구분이 되기 때문에 DiscriminatorColumn 을 사용해도 적용이 안된다.
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+// BasicItem 은 단독으로 사용될 일이 없기 때문에 애초에 처음부터 추상클래스로 만들었어야한다.
+public abstract class BasicItem {
 
     @Id @GeneratedValue
     private Long id;
