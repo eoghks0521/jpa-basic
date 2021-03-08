@@ -8,6 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.bigring.jparoadmap.BaseEntity;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,7 +21,7 @@ import lombok.experimental.Accessors;
 @Setter
 @ToString(exclude = "team")
 @Entity
-public class RelationMember {
+public class RelationMember extends BaseEntity {
 
     @Id @GeneratedValue
     @Column(name = "member_id")

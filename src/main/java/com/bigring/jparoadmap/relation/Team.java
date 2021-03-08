@@ -9,6 +9,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.bigring.jparoadmap.BaseEntity;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -19,7 +21,7 @@ import lombok.experimental.Accessors;
 @Getter
 @ToString(exclude = "members")
 @Entity
-public class Team {
+public class Team extends BaseEntity {
 
     @Id @GeneratedValue
     private Long id;

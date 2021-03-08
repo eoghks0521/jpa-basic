@@ -36,7 +36,10 @@ public class StudyRunner implements ApplicationRunner {
         //managePersistenceContext();
         // unidirectional();
         // bidirectional();
-        sample();
+        // sample();
+        // joinStrategy();
+        // tablePerClassStrategy();
+        mappedSuperClass();
     }
 
     private void create(){
@@ -155,6 +158,47 @@ public class StudyRunner implements ApplicationRunner {
         for (OrderItem findOrderItem : orderItems) {
             log.info("item count: {}", findOrderItem.getCount());
         }
+    }
+
+    private void joinStrategy(){
+        Movie movie = new Movie();
+        movie.setDirector("aaaa");
+        movie.setActor("bbbb");
+        movie.setName("바람과함께사라지다");
+        movie.setPrice(10000);
+
+        em.persist(movie);
+
+        em.flush();
+        em.clear();
+
+        Movie findMovie = em.find(Movie.class, movie.getId());
+        log.info("findMovie: {}",findMovie);
+    }
+
+    private void tablePerClassStrategy(){
+        // union 으로 모든 테이블을 뒤적거리므로 매우 비효율
+        Movie movie = new Movie();
+        movie.setDirector("aaaa");
+        movie.setActor("bbbb");
+        movie.setName("바람과함께사라지다");
+        movie.setPrice(10000);
+
+        em.persist(movie);
+
+        em.flush();
+        em.clear();
+
+        BasicItem findItem = em.find(BasicItem.class, movie.getId());
+        log.info("findItem: {}",findItem);
+    }
+
+    private void mappedSuperClass(){
+        RelationMember member = new RelationMember();
+        member.setCreatedBy("kwon");
+        member.setCreateDate(LocalDateTime.now());
+
+        em.persist(member);
     }
 
 }
