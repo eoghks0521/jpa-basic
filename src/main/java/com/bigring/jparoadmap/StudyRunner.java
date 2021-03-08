@@ -38,7 +38,8 @@ public class StudyRunner implements ApplicationRunner {
         // bidirectional();
         // sample();
         // joinStrategy();
-        tablePerClassStrategy();
+        // tablePerClassStrategy();
+        mappedSuperClass();
     }
 
     private void create(){
@@ -190,6 +191,14 @@ public class StudyRunner implements ApplicationRunner {
 
         BasicItem findItem = em.find(BasicItem.class, movie.getId());
         log.info("findItem: {}",findItem);
+    }
+
+    private void mappedSuperClass(){
+        RelationMember member = new RelationMember();
+        member.setCreatedBy("kwon");
+        member.setCreateDate(LocalDateTime.now());
+
+        em.persist(member);
     }
 
 }
