@@ -36,7 +36,8 @@ public class StudyRunner implements ApplicationRunner {
         //managePersistenceContext();
         // unidirectional();
         // bidirectional();
-        sample();
+        // sample();
+        joinStrategy();
     }
 
     private void create(){
@@ -155,6 +156,22 @@ public class StudyRunner implements ApplicationRunner {
         for (OrderItem findOrderItem : orderItems) {
             log.info("item count: {}", findOrderItem.getCount());
         }
+    }
+
+    private void joinStrategy(){
+        Movie movie = new Movie();
+        movie.setDirector("aaaa");
+        movie.setActor("bbbb");
+        movie.setName("바람과함께사라지다");
+        movie.setPrice(10000);
+
+        em.persist(movie);
+
+        em.flush();
+        em.clear();
+
+        Movie findMovie = em.find(Movie.class, movie.getId());
+        log.info("findMovie: {}",findMovie);
     }
 
 }
