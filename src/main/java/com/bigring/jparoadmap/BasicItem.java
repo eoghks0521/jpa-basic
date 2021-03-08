@@ -15,9 +15,8 @@ import lombok.ToString;
 @Setter
 @ToString
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
-// 자식 테이블명 DTYPE 추가
-@DiscriminatorColumn
+// DTYPE이 필수로 필요하기 때문에 DiscriminatorColumn 어노테이션이 없어도 DTYPE이 생성된다.
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class BasicItem {
 
     @Id @GeneratedValue
