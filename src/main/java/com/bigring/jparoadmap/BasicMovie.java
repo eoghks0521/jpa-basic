@@ -11,9 +11,9 @@ import lombok.ToString;
 @Setter
 @ToString
 @Entity
-@DiscriminatorValue("B")
-public class Book extends BasicItem {
+@DiscriminatorValue("M")
+public class BasicMovie extends BasicItem {
 
-    private String author;
-    private String isbn;
+    private String director;
+    private String actor;
 }

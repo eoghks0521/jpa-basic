@@ -11,9 +11,9 @@ import lombok.ToString;
 @Setter
 @ToString
 @Entity
-@DiscriminatorValue("M")
-public class Movie extends BasicItem {
+// 기본값은 Entity 명이지만 변경 가능하다.
+@DiscriminatorValue("A")
+public class BasicAlbum extends BasicItem {
 
-    private String director;
-    private String actor;
+    private String artist;
 }

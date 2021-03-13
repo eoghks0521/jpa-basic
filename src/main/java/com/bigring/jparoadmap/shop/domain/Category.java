@@ -1,5 +1,7 @@
 package com.bigring.jparoadmap.shop.domain;
 
+import static javax.persistence.FetchType.LAZY;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.bigring.jparoadmap.BaseEntity;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -19,9 +23,10 @@ import lombok.ToString;
 @Setter
 @ToString(exclude = "categoryItems")
 @Entity
-public class Category {
+public class Category extends BaseEntity {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "category_id")
     private Long id;
 
@@ -30,7 +35,7 @@ public class Category {
     @OneToMany(mappedBy = "category")
     private List<CategoryItem> categoryItems = new ArrayList<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "parent_id")
     private Category parent;
 

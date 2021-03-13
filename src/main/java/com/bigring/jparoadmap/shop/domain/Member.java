@@ -1,13 +1,11 @@
 package com.bigring.jparoadmap.shop.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+
+import com.bigring.jparoadmap.BaseEntity;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -17,9 +15,10 @@ import lombok.ToString;
 @Getter
 @ToString
 @Entity
-public class Member {
+public class Member extends BaseEntity {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "member_id")
     private Long id;
 
