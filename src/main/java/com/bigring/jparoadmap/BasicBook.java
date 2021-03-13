@@ -11,9 +11,9 @@ import lombok.ToString;
 @Setter
 @ToString
 @Entity
-// 기본값은 Entity 명이지만 변경 가능하다.
-@DiscriminatorValue("A")
-public class Album extends BasicItem {
+@DiscriminatorValue("B")
+public class BasicBook extends BasicItem {
 
-    private String artist;
+    private String author;
+    private String isbn;
 }

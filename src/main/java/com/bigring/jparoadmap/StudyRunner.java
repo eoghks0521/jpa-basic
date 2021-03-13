@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.bigring.jparoadmap.relation.RelationMember;
 import com.bigring.jparoadmap.relation.Team;
-import com.bigring.jparoadmap.shop.domain.Item;
+import com.bigring.jparoadmap.shop.domain.Book;
 import com.bigring.jparoadmap.shop.domain.Member;
 import com.bigring.jparoadmap.shop.domain.Order;
 import com.bigring.jparoadmap.shop.domain.OrderItem;
@@ -32,30 +32,31 @@ public class StudyRunner implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         // create();
         // update();
-        // findByJPQL();
+        // findByJ PQL();
         //managePersistenceContext();
         // unidirectional();
         // bidirectional();
         // sample();
         // joinStrategy();
         // tablePerClassStrategy();
-        mappedSuperClass();
+        // mappedSuperClass();
+        sample2();
     }
 
-    private void create(){
+    private void create() {
         BasicMember basicMember = new BasicMember();
         basicMember.setId(1L);
         basicMember.setName("hello");
         em.persist(basicMember);
     }
 
-    private void update(){
+    private void update() {
         BasicMember findBasicMember = em.find(BasicMember.class, 1L);
         log.info("Member id: {}, name: {}", findBasicMember.getId(), findBasicMember.getName());
         findBasicMember.setName("updateHello");
     }
 
-    private void findByJPQL(){
+    private void findByJPQL() {
         List<BasicMember> basicMemberList = em.createQuery("select m from Member as m", BasicMember.class)
             .setFirstResult(0)
             .setMaxResults(10)
@@ -65,7 +66,7 @@ public class StudyRunner implements ApplicationRunner {
         }
     }
 
-    private void managePersistenceContext(){
+    private void managePersistenceContext() {
         //비영속
         BasicMember basicMember = new BasicMember();
         basicMember.setId(3L);
@@ -78,7 +79,7 @@ public class StudyRunner implements ApplicationRunner {
         // before after 와 상관없이 뒤에 쿼리가 날아간다. -> 트랜잭션 커밋을 하는 순간 날아감
 
         // 1차 캐시에서 값을 가져오기 때문에 쿼리가 날아가지 않는다.
-        BasicMember findBasicMember = em.find(BasicMember.class,"3L");
+        BasicMember findBasicMember = em.find(BasicMember.class, "3L");
         log.info("member name: {}", findBasicMember.getName());
     }
 
@@ -99,7 +100,7 @@ public class StudyRunner implements ApplicationRunner {
 
         RelationMember findMember = em.find(RelationMember.class, member.id());
         Team findTeam = findMember.team();
-        log.info("findTeam = {}",findTeam.name());
+        log.info("findTeam = {}", findTeam.name());
 
         // 양방향 테스트를 위해 주석처리
         // 맴버 외래키 변경
@@ -128,7 +129,7 @@ public class StudyRunner implements ApplicationRunner {
         }
     }
 
-    private void sample(){
+    private void sample() {
 
         Member member = new Member();
         member.setName("memberA");
@@ -139,14 +140,9 @@ public class StudyRunner implements ApplicationRunner {
         order.setMember(member);
         em.persist(order);
 
-        Item item = new Item();
-        item.setName("itemA");
-        em.persist(item);
-
         OrderItem orderItem = new OrderItem();
         orderItem.setCount(3);
         orderItem.addOrder(order);
-        orderItem.setItem(item);
         em.persist(orderItem);
 
         em.flush();
@@ -160,8 +156,8 @@ public class StudyRunner implements ApplicationRunner {
         }
     }
 
-    private void joinStrategy(){
-        Movie movie = new Movie();
+    private void joinStrategy() {
+        BasicMovie movie = new BasicMovie();
         movie.setDirector("aaaa");
         movie.setActor("bbbb");
         movie.setName("바람과함께사라지다");
@@ -172,13 +168,13 @@ public class StudyRunner implements ApplicationRunner {
         em.flush();
         em.clear();
 
-        Movie findMovie = em.find(Movie.class, movie.getId());
-        log.info("findMovie: {}",findMovie);
+        BasicMovie findMovie = em.find(BasicMovie.class, movie.getId());
+        log.info("findMovie: {}", findMovie);
     }
 
-    private void tablePerClassStrategy(){
+    private void tablePerClassStrategy() {
         // union 으로 모든 테이블을 뒤적거리므로 매우 비효율
-        Movie movie = new Movie();
+        BasicMovie movie = new BasicMovie();
         movie.setDirector("aaaa");
         movie.setActor("bbbb");
         movie.setName("바람과함께사라지다");
@@ -190,15 +186,23 @@ public class StudyRunner implements ApplicationRunner {
         em.clear();
 
         BasicItem findItem = em.find(BasicItem.class, movie.getId());
-        log.info("findItem: {}",findItem);
+        log.info("findItem: {}", findItem);
     }
 
-    private void mappedSuperClass(){
+    private void mappedSuperClass() {
         RelationMember member = new RelationMember();
         member.setCreatedBy("kwon");
         member.setCreateDate(LocalDateTime.now());
 
         em.persist(member);
+    }
+
+    private void sample2() {
+        Book book = new Book();
+        book.setName("kwon's house");
+        book.setAuthor("bigring");
+
+        em.persist(book );
     }
 
 }

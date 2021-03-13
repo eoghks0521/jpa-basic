@@ -16,6 +16,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.bigring.jparoadmap.BaseEntity;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -26,9 +28,10 @@ import lombok.ToString;
 @Entity
 // order 가 예약어로 걸려 있는 DB가 존재하기 때문에 s를 붙여줬다
 @Table(name = "orders")
-public class Order {
+public class Order extends BaseEntity {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "order_id")
     private Long id;
 
