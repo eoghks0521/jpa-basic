@@ -40,7 +40,9 @@ public class StudyRunner implements ApplicationRunner {
         // joinStrategy();
         // tablePerClassStrategy();
         // mappedSuperClass();
-        sample2();
+        // sample2();
+        // proxy();
+        cacadeAndOrphan();
     }
 
     private void create() {
@@ -202,7 +204,47 @@ public class StudyRunner implements ApplicationRunner {
         book.setName("kwon's house");
         book.setAuthor("bigring");
 
-        em.persist(book );
+        em.persist(book);
+    }
+
+    private void proxy() {
+        BasicMember member = new BasicMember();
+        member.setName("kwon");
+        member.setId(1L);
+
+        em.persist(member);
+
+        em.flush();
+        em.clear();
+
+        // JPA 의 기본 메커니즘은 영속성 컨텍스트를 이용해서 같은 호출에 대해서 == 비교가 true 가 되어야한다.
+        BasicMember m1 = em.find(BasicMember.class, member.getId());
+        BasicMember reference = em.getReference(BasicMember.class, member.getId());
+
+        log.info("m1 == reference: {}", m1 == reference);
+        em.clear();
+
+        reference = em.getReference(BasicMember.class, member.getId());
+        m1 = em.find(BasicMember.class, member.getId());
+        log.info("m1 == reference: {}", m1 == reference);
+
+    }
+
+    private void cacadeAndOrphan() {
+        Child child1 = new Child();
+        Child child2 = new Child();
+
+        Parent parent = new Parent();
+        parent.addChild(child1);
+        parent.addChild(child2);
+
+        em.persist(parent);
+
+        em.flush();
+        em.clear();
+
+        Parent parent1 = em.find(Parent.class, parent.getId());
+        parent1.getChildren().remove(0);
     }
 
 }
