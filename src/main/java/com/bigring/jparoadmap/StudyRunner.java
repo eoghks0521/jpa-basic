@@ -2,6 +2,7 @@ package com.bigring.jparoadmap;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -42,7 +43,8 @@ public class StudyRunner implements ApplicationRunner {
         // mappedSuperClass();
         // sample2();
         // proxy();
-        cacadeAndOrphan();
+        // cacadeAndOrphan();
+        valueTypeCollection();
     }
 
     private void create() {
@@ -245,6 +247,51 @@ public class StudyRunner implements ApplicationRunner {
 
         Parent parent1 = em.find(Parent.class, parent.getId());
         parent1.getChildren().remove(0);
+    }
+
+    private void valueTypeCollection() {
+        BasicMember member = new BasicMember();
+        member.setName("member1");
+        member.setHomeAddress(new Address("city1", "street1", "zipcode1"));
+
+        member.getFavoriteFoods().add("치킨");
+        member.getFavoriteFoods().add("족발");
+        member.getFavoriteFoods().add("햄버거");
+
+        member.getAddressHistory().add(new AddressEntity("old2", "street2", "zipcode2"));
+        member.getAddressHistory().add(new AddressEntity("old3", "street3", "zipcode3"));
+        member.getAddressHistory().add(new AddressEntity("old4", "street4", "zipcode4"));
+
+        em.persist(member);
+
+        em.flush();
+        em.clear();
+
+        BasicMember findMember = em.find(BasicMember.class, member.getId());
+
+        //값 타입은 기본적으로 지연로딩이다.
+        List<AddressEntity> findAddressHistory = findMember.getAddressHistory();
+
+        System.out.println("findAddressHistory = " + findAddressHistory);
+        Set<String> findFavoriteFoods = findMember.getFavoriteFoods();
+        System.out.println("findFavoriteFoods = " + findFavoriteFoods);
+
+        // 불변성을 유지해주어야 하기 때문에 밑의 코드는 사용하면 안됨
+        // findMember.getHomeAddress().setCity("newCity");
+
+        Address address = findMember.getHomeAddress();
+        findMember.setHomeAddress(new Address("newCity", address.getStreet(), address.getZipcode()));
+
+        // 값 타입이기 때문에 업데이트를 해도 안되고 할 수도 없다. 때문에 지워준뒤 새로 넣어주어야한다.
+        // 컬랙션 값만 바꾸워줘도 디비 쿼리가 날아가 값을 변경해준다.
+        findMember.getFavoriteFoods().remove("치킨");
+        findMember.getFavoriteFoods().add("한식");
+
+        // 컬랙션은 기본적으로 대상을 찾을 때 equals 를 사용한다 때문에 equals 재정의를 잘 해주어야한다.
+        findMember.getAddressHistory().remove(new AddressEntity("old2", "street2", "zipcode2"));
+        findMember.getAddressHistory().add(new AddressEntity("newCity2", "street2", "zipcode2"));
+
+
     }
 
 }
