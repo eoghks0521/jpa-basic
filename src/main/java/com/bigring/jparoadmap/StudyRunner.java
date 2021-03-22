@@ -252,7 +252,7 @@ public class StudyRunner implements ApplicationRunner {
     private void valueTypeCollection() {
         BasicMember member = new BasicMember();
         member.setName("member1");
-        member.setHomeAddress(new Address("city1", "street1", "zipcode1"));
+        member.setHomeBaseAddress(new BaseAddress("city1", "street1", "zipcode1"));
 
         member.getFavoriteFoods().add("치킨");
         member.getFavoriteFoods().add("족발");
@@ -279,8 +279,8 @@ public class StudyRunner implements ApplicationRunner {
         // 불변성을 유지해주어야 하기 때문에 밑의 코드는 사용하면 안됨
         // findMember.getHomeAddress().setCity("newCity");
 
-        Address address = findMember.getHomeAddress();
-        findMember.setHomeAddress(new Address("newCity", address.getStreet(), address.getZipcode()));
+        BaseAddress baseAddress = findMember.getHomeBaseAddress();
+        findMember.setHomeBaseAddress(new BaseAddress("newCity", baseAddress.getStreet(), baseAddress.getZipcode()));
 
         // 값 타입이기 때문에 업데이트를 해도 안되고 할 수도 없다. 때문에 지워준뒤 새로 넣어주어야한다.
         // 컬랙션 값만 바꾸워줘도 디비 쿼리가 날아가 값을 변경해준다.

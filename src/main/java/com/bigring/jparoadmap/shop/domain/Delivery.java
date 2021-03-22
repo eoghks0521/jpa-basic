@@ -30,11 +30,10 @@ public class Delivery extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private DeliveryStatus status;
 
-    @OneToOne(mappedBy = "delivery", fetch =  LAZY)
+    @OneToOne(mappedBy = "delivery", fetch = LAZY)
     private Order order;
 
-    private String city;
-    private String street;
-    private String zipcode;
+    @Enumerated
+    private Address address;
 
 }

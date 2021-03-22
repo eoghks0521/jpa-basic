@@ -22,7 +22,7 @@ public class AddressEntity {
     @GeneratedValue
     private Long id;
 
-    private Address address;
+    private BaseAddress baseAddress;
 
     public AddressEntity(String old2, String street2, String zipcode2) {
     }

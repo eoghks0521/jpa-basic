@@ -17,7 +17,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderColumn;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,7 +37,7 @@ public class BasicMember {
     private Period workPeriod;
 
     @Embedded
-    private Address homeAddress;
+    private BaseAddress homeBaseAddress;
 
     @ElementCollection
     @CollectionTable(name = "favorite_food", joinColumns = @JoinColumn(name = "member_id"))
@@ -60,6 +59,6 @@ public class BasicMember {
         @AttributeOverride(name = "street", column = @Column(name = "work_street")),
         @AttributeOverride(name = "zipcode", column = @Column(name = "work_zipcode"))
     })
-    private Address workAddress;
+    private BaseAddress workBaseAddress;
 
 }
